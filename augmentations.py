@@ -160,7 +160,7 @@ _DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 _TOKENIZER = EsmTokenizer.from_pretrained("facebook/esm-1b")
 _MLM = EsmForMaskedLM.from_pretrained("facebook/esm-1b").to(_DEVICE).eval()
 
-#Paper: Kim et al., NeurIPS 2023 (repo)
+#Paper: Kim et al., NeurIPS 2023 (https://github.com/kaist-silab/bootgen)
 # Core Idea: Train a score-conditioned generator (ESM-1b) to sample realistic sequences conditioned on a target property.
 # Implementation: We skip training and instead sample mutations directly from ESM-1b logits at masked positions.
 # Hyper-params: mag = fraction of positions to mask; T = temperature controlling diversity.
@@ -208,7 +208,7 @@ def _neighbour_dict(threshold=1):
 _BLOSUM_NEIGH = _neighbour_dict()
 
 # 2. NaNa-BLOSUM
-# Paper: Huang et al., GNN augmentation (repo)
+# Paper: Huang et al., GNN augmentation (https://github.com/r08b46009/Code_for_MIGU_NANA/tree/main)
 # Core Idea: Replace residues with BLOSUM62 “semantic neighbours” to preserve physicochemical context.
 # Implementation: Per-residue coin-flip → pick neighbour with BLOSUM62 ≥ 1.
 # Hyper-params: mag = probability of replacement; threshold = 1 (can be tuned).
@@ -234,7 +234,7 @@ CODON = {
 STOP_CODONS = {"TAA", "TAG", "TGA"}
 CODON2AA = {c: aa for aa, codons in CODON.items() for c in codons}
 
-# Paper: Minot & Reddy, Bioinformatics Advances 2022 (repo)
+# Paper: Minot & Reddy, Bioinformatics Advances 2022 (https://github.com/minotm/NTA)
 # Core Idea: Introduce silent or non-silent mutations at codon level while blocking STOP codons.
 # Implementation: Back-translate → mutate nucleotides → re-translate → STOP filter.
 # Hyper-params: mag = nucleotide mutation rate.
@@ -271,7 +271,7 @@ for aa in AMINO_ACIDS:
     if aa not in SPIDER_SUB:
         SPIDER_SUB[aa] = {a: 1.0/20 for a in AMINO_ACIDS}
 
-#Paper: Lee et al., IJMS 2021 (repo)
+#Paper: Lee et al., IJMS 2021 (https://github.com/bzlee-bio/NT_estimation)
 # Core Idea: Use domain-specific substitution matrix learned from spider neurotoxins.
 # Implementation: Sample each residue from the published 20 × 20 spider-toxin matrix.
 # Hyper-params: mag = substitution probability.
@@ -302,7 +302,7 @@ def _esm_vector(seq):
 _INDEX = None  # load once at import
 _DB_IDS  = []  # list[str] same order as vectors
 
-#Paper: Chang et al., “Retrieved Sequence Augmentation” (2023) (repo)
+#Paper: Chang et al., “Retrieved Sequence Augmentation” (2023) (https://github.com/chang-github-00/RSA)
 # Core Idea: Retrieve k nearest homologues (ESM-1b space) and splice in a segment.
 # Implementation: Offline ESM-1b index → k-NN search → copy random segment.
 # Hyper-params: mag unused; instead k (neighbours) & seg_len (length to splice).
@@ -336,7 +336,7 @@ from transformers import AutoTokenizer, AutoModelForMaskedLM
 _PREIS_TOK = AutoTokenizer.from_pretrained("CBRC-lab/preis-base")
 _PREIS_LM  = AutoModelForMaskedLM.from_pretrained("CBRC-lab/preis-base").eval()
 
-#Paper: CBRC-lab, 2023 (repo)
+#Paper: CBRC-lab, 2023 (https://github.com/CBRC-lab/PreIS)
 # Core Idea: Subtype-conditional masked LM – generate HA sequences while preserving influenza subtype label.
 # Implementation: Use the released PreIS-HA masked LM to sample masked positions.
 # Hyper-params: mag = fraction of positions to mask.
@@ -371,7 +371,7 @@ def _kmer_vector(window, k=3):
         vec[idx] += 1
     return vec
 
-#Paper: Kucheryavskiy et al., Analytica Chimica Acta 2023 (repo)
+#Paper: Kucheryavskiy et al., Analytica Chimica Acta 2023 (https://github.com/svkucheryavski/pcv)
 # Core Idea: Apply orthogonal Procrustes rotation to k-mer vectors to create orientation variants.
 # Implementation: Tri-peptide vector → rotation → nearest-AA mapping.
 # Hyper-params: mag = window-size fraction; k-mer size = 3 (fixed).
@@ -409,7 +409,7 @@ def pcv_augment(seq, mag):
 # Doubly-Robust Post-Imputation
 from collections import Counter
 
-#Paper: Moon et al., 2024 (repo)
+#Paper: Moon et al., 2024 (https://github.com/HaeunM/peptide-imputation-inference)
 # Core Idea: Impute missing residues using neighbour consensus under a doubly-robust framework.
 # Implementation: Randomly mask residues → fill with most-common neighbour (±radius).
 # Hyper-params: mag = mask rate; radius = context window.

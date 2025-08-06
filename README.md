@@ -1,1 +1,1 @@
-# enhancing_protein_prediction_using_augmentations
+# Augmentation lists
